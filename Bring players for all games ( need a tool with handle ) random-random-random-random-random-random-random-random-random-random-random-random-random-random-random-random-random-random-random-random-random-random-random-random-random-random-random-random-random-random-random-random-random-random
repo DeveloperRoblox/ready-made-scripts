@@ -136,16 +136,13 @@ Bring.MouseButton1Down:Connect(function()
                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
                             wait()
                         until getgenv().ToolSave.Parent == Character
-                        local message = Instance.new("Message", game.CoreGui)
-                        message.Text = "Press LeftControl to teleport to old position of you character"
+                        game.StarterGui:SetCore("SendNotification", {
+                            Title = "Sucess";
+                            Text = "Press LeftControl to teleport to old position of you character";
+                        })
                         game:GetService("UserInputService").InputBegan:Connect(function(input)
                             if input.KeyCode == Enum.KeyCode.LeftControl then
                                 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(workspace["PartPosition"].Position)
-                                wait()
-                                OldPosPart:Destroy()
-                                if message then
-                                    message:Destroy()
-                                end
                             end
                         end)
                         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Now
