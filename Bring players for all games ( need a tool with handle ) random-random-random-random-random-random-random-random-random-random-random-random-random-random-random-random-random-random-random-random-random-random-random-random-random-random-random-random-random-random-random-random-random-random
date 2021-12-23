@@ -1,0 +1,159 @@
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local NameBox = Instance.new("TextBox")
+local UICorner_2 = Instance.new("UICorner")
+local MainTitle = Instance.new("TextLabel")
+local UICorner_3 = Instance.new("UICorner")
+local Bring = Instance.new("TextButton")
+local UICorner_4 = Instance.new("UICorner")
+
+local Uis = game:GetService("UserInputService")
+    Uis.InputBegan:Connect(function(Input)
+        if Input.KeyCode == Enum.KeyCode.RightControl then
+            Frame.Visible = not Frame.Visible
+        end
+    end)
+    Uis.InputBegan:Connect(function(Input)
+        if Input.KeyCode == Enum.KeyCode.LeftShift then
+            getgenv().OldWalkSpeed = game.Players.LocalPlayer.Character.Humanoid.WalkSpeed
+            spawn(function()
+                getgenv().Run = true
+                while getgenv().Run == true do
+                    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100
+                    wait()
+                end
+            end)
+        end
+    end)
+    Uis.InputEnded:Connect(function(Input)
+        if Input.KeyCode == Enum.KeyCode.LeftShift then
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = getgenv().OldWalkSpeed
+            getgenv().Run = false
+        end
+    end)
+
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+Frame.Position = UDim2.new(0.0699925572, 0, 0.181818187, 0)
+Frame.Size = UDim2.new(0, 270, 0, 176)
+Frame.Active = true
+Frame.Draggable = true
+
+UICorner.Parent = Frame
+
+NameBox.Name = "NameBox"
+NameBox.Parent = Frame
+NameBox.BackgroundColor3 = Color3.fromRGB(59, 59, 59)
+NameBox.Position = UDim2.new(0.129629627, 0, 0.323863626, 0)
+NameBox.Size = UDim2.new(0, 200, 0, 50)
+NameBox.Font = Enum.Font.SourceSansBold
+NameBox.Text = "Name or display"
+NameBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+NameBox.TextSize = 23.000
+if getgenv().NameSave then
+    NameBox.Text = getgenv().NameSave
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "Auto load name";
+        Text = "Old name reloaded!";
+    })
+end
+UICorner_2.Parent = NameBox
+
+MainTitle.Name = "MainTitle"
+MainTitle.Parent = Frame
+MainTitle.BackgroundColor3 = Color3.fromRGB(47, 47, 47)
+MainTitle.Size = UDim2.new(0, 270, 0, 47)
+MainTitle.Font = Enum.Font.SourceSansBold
+MainTitle.Text = "Bring player"
+MainTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+MainTitle.TextScaled = true
+MainTitle.TextSize = 14.000
+MainTitle.TextWrapped = true
+
+UICorner_3.Parent = MainTitle
+
+Bring.Name = "Bring"
+Bring.Parent = Frame
+Bring.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+Bring.Position = UDim2.new(0.1037037, 0, 0.670454562, 0)
+Bring.Size = UDim2.new(0, 213, 0, 50)
+Bring.Font = Enum.Font.SourceSansBold
+Bring.Text = "Bring"
+Bring.TextColor3 = Color3.fromRGB(255, 255, 255)
+Bring.TextScaled = true
+Bring.TextSize = 14.000
+Bring.TextWrapped = true
+Bring.MouseButton1Down:Connect(function()
+    getgenv().NameSave = NameBox.Text
+    for i,players in pairs(game.Players:GetChildren()) do
+        if players.Name == NameBox.Text or players.DisplayName == NameBox.Text then
+            local Player = players
+            local Character = Player.Character or Player.CharacterAdded:wait()
+
+            for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                if v:IsA("Tool") then
+                    if v:FindFirstChild("Handle") then
+                        game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
+                        wait()
+                        for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                            if v:IsA("Tool") then
+                                getgenv().ToolSave = v 
+                                wait()
+                                if not Character.Humanoid.Sit == true then
+                                    v.Parent = game.Players.LocalPlayer.Backpack
+                                    local Now = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+                                    game.Players.LocalPlayer.Character.Humanoid.Name = 1
+                                    local l = game.Players.LocalPlayer.Character["1"]:Clone()
+                                    game.Players.LocalPlayer.Character.Animate.Disabled = true
+                                    l.Parent = game.Players.LocalPlayer.Character
+                                    l.Name = "Humanoid"
+                                    wait()
+                                    game.Players.LocalPlayer.Character["1"]:Destroy()
+                                    wait()
+                                    game:GetService("Workspace").CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character
+                                    for i = 1,5 do
+                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
+                                        wait()
+                                    end
+                                    getgenv().ToolSave.Parent = game.Players.LocalPlayer.Character
+                                    repeat
+                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
+                                        wait()
+                                    until getgenv().ToolSave.Parent == Character
+                                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Now
+                                    game.StarterGui:SetCore("SendNotification", {
+                                        Title = "Sucess";
+                                        Text = "Bring " .. Player
+                                    })
+                                    for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                                        v:Destroy()
+                                    end
+                                    wait()
+                                    game.Players.LocalPlayer.CharacterAdded:wait():WaitForChild("HumanoidRootPart")
+                                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Now
+                                else
+                                    game.StarterGui:SetCore("SendNotification", {
+                                        Title = "Error";
+                                        Text = Player .. " is seating"
+                                    })
+
+                                end
+                            end
+                        end
+                    else
+                        game.StarterGui:SetCore("SendNotification", {
+                            Title = "Error";
+                            Text = "Your tools dont have handle";
+                        })
+                    end
+                end
+            end
+        end
+    end
+end)
+
+UICorner_4.Parent = Bring
