@@ -94,61 +94,47 @@ Bring.MouseButton1Down:Connect(function()
             local Player = players
             local Character = Player.Character or Player.CharacterAdded:wait()
 
-            for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+            for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
                 if v:IsA("Tool") then
-                    if v:FindFirstChild("Handle") then
-                        game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
+                    getgenv().ToolSave = v 
+                    if not Character.Humanoid.Sit == true then
+                        getgenv().ToolSave.Parent = game.Players.LocalPlayer.Backpack
+                        local Now = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+                        game.Players.LocalPlayer.Character.Humanoid.Name = 1
+                        local l = game.Players.LocalPlayer.Character["1"]:Clone()
+                        game.Players.LocalPlayer.Character.Animate.Disabled = true
+                        l.Parent = game.Players.LocalPlayer.Character
+                        l.Name = "Humanoid"
                         wait()
-                        for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-                            if v:IsA("Tool") then
-                                getgenv().ToolSave = v 
-                                wait()
-                                if not Character.Humanoid.Sit == true then
-                                    v.Parent = game.Players.LocalPlayer.Backpack
-                                    local Now = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-                                    game.Players.LocalPlayer.Character.Humanoid.Name = 1
-                                    local l = game.Players.LocalPlayer.Character["1"]:Clone()
-                                    game.Players.LocalPlayer.Character.Animate.Disabled = true
-                                    l.Parent = game.Players.LocalPlayer.Character
-                                    l.Name = "Humanoid"
-                                    wait()
-                                    game.Players.LocalPlayer.Character["1"]:Destroy()
-                                    wait()
-                                    game:GetService("Workspace").CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character
-                                    for i = 1,5 do
-                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
-                                        wait()
-                                    end
-                                    getgenv().ToolSave.Parent = game.Players.LocalPlayer.Character
-                                    repeat
-                                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
-                                        wait()
-                                    until getgenv().ToolSave.Parent == Character
-                                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Now
-                                    game.StarterGui:SetCore("SendNotification", {
-                                        Title = "Sucess";
-                                        Text = "Bring " .. Player
-                                    })
-                                    for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-                                        v:Destroy()
-                                    end
-                                    wait()
-                                    game.Players.LocalPlayer.CharacterAdded:wait():WaitForChild("HumanoidRootPart")
-                                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Now
-                                else
-                                    game.StarterGui:SetCore("SendNotification", {
-                                        Title = "Error";
-                                        Text = Player .. " is seating"
-                                    })
-
-                                end
-                            end
+                        game.Players.LocalPlayer.Character["1"]:Destroy()
+                        wait()
+                        game:GetService("Workspace").CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character
+                        for i = 1,5 do
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
+                            wait()
                         end
+                        getgenv().ToolSave.Parent = game.Players.LocalPlayer.Character
+                        repeat
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
+                            wait()
+                        until getgenv().ToolSave.Parent == Character
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Now
+                        game.StarterGui:SetCore("SendNotification", {
+                            Title = "Sucess";
+                            Text = "Bring " .. Player
+                        })
+                        for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                            v:Destroy()
+                        end
+                        wait()
+                        game.Players.LocalPlayer.CharacterAdded:wait():WaitForChild("HumanoidRootPart")
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Now
                     else
                         game.StarterGui:SetCore("SendNotification", {
                             Title = "Error";
-                            Text = "Your tools dont have handle";
+                            Text = Player .. " is seating"
                         })
+
                     end
                 end
             end
