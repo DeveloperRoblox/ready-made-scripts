@@ -98,6 +98,24 @@ Bring.MouseButton1Down:Connect(function()
                 if v:IsA("Tool") then
                     getgenv().ToolSave = v 
                     if not Character.Humanoid.Sit == true then
+                        if not workspace:FindFirstChild("PartPosition") then
+                            local OldPosPart = Instance.new("Part")
+                            OldPosPart.Parent = workspace 
+                            OldPosPart.Name = "PartPosition"
+                            OldPosPart.Transparency = 0.3
+                            OldPosPart.Anchored = true
+                            OldPosPart.CanCollide = false
+                            OldPosPart.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+                        else
+                            workspace["PartPosition"]:Destroy()
+                            local OldPosPart = Instance.new("Part")
+                            OldPosPart.Parent = workspace 
+                            OldPosPart.Name = "PartPosition"
+                            OldPosPart.Transparency = 0.3
+                            OldPosPart.Anchored = true
+                            OldPosPart.CanCollide = false
+                            OldPosPart.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+                        end
                         getgenv().ToolSave.Parent = game.Players.LocalPlayer.Backpack
                         local Now = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
                         game.Players.LocalPlayer.Character.Humanoid.Name = 1
@@ -118,6 +136,18 @@ Bring.MouseButton1Down:Connect(function()
                             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
                             wait()
                         until getgenv().ToolSave.Parent == Character
+                        local message = Instance.new("Message", game.CoreGui)
+                        message.Text = "Press LeftControl to teleport to old position of you character"
+                        game:GetService("UserInputService").InputBegan:Connect(function(input)
+                            if input.KeyCode == Enum.KeyCode.LeftControl then
+                                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(workspace["PartPosition"].Position)
+                                wait()
+                                OldPosPart:Destroy()
+                                if message then
+                                    message:Destroy()
+                                end
+                            end
+                        end)
                         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = Now
                         game.StarterGui:SetCore("SendNotification", {
                             Title = "Sucess";
